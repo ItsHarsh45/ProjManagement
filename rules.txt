@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        request.auth.token.email in ['harshkemali123@gmail.com'];
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && 
+        request.auth.uid == userId;
+    }
+    
+    function isValidProject() {
+      let project = request.resource.data;
+      return 
+        project.title is string &&
+        project.title.size() >= 3 &&
+        project.title.size() <= 100 &&
+        
+        project.description is string &&
+        project.description.size() >= 10 &&
+        project.description.size() <= 1000 &&
+        
+        project.githubUrl is string &&
+        project.githubUrl.matches('https://github.com/.*') &&
+        
+        (project.demoUrl == null || 
+         (project.demoUrl is string && 
+          project.demoUrl.matches('https://.*'))) &&
+        
+        project.imageUrl is string &&
+        project.imageUrl.matches('https://.*') &&
+        
+        project.tags is list &&
+        project.tags.size() > 0 &&
+        project.tags.size() <= 10;
+    }
+    
+    // Projects collection rules
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && isValidProject();
+      allow update: if (isAdmin() || isOwner(resource.data.userId)) && isValidProject();
+      allow delete: if isAdmin() || isOwner(resource.data.userId);
+    }
+    
+    // Messages collection rules (for contact form)
+    match /messages/{messageId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated() &&
+        request.resource.data.name is string &&
+        request.resource.data.email is string &&
+        request.resource.data.message is string &&
+        request.resource.data.createdAt is string;
+      allow update, delete: if false;
+    }
+  }
+}
