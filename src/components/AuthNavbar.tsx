@@ -49,7 +49,7 @@ export function AuthNavbar() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <Code2 className="w-6 h-6 text-blue-600" />
-              <Link to="/" className="font-semibold text-black">InnoHub</Link>
+              <Link to="/" className="font-semibold text-black">GeekPeak</Link>
             </div>
 
             <div className="hidden md:flex items-center gap-8">

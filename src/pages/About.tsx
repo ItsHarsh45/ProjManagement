@@ -9,7 +9,7 @@ export function About() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl font-bold mb-4">About InnoHub</h1>
+          <h1 className="text-4xl font-bold mb-4">About GeekPeak</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Empowering students to innovate and create the future through technology
           </p>
@@ -23,7 +23,7 @@ export function About() {
           >
             <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
             <p className="text-gray-600 mb-8 leading-relaxed">
-              At InnoHub, we believe in nurturing the next generation of innovators. Our platform serves
+              At GeekPeak, we believe in nurturing the next generation of innovators. Our platform serves
               as a bridge between academic learning and real-world application, providing students with
               the resources and support they need to bring their ideas to life.
             </p>

@@ -9,7 +9,7 @@ export function Navbar() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <Code2 className="w-6 h-6 text-blue-600" />
-              <span className="font-semibold text-black">InnoHub</span>
+              <span className="font-semibold text-black">GeekPeak</span>
             </div>
 
             <div className="hidden md:flex items-center gap-8">
