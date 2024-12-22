@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useProjects } from '../hooks/useProjects';
+import { useProjectSearch } from '../hooks/useProjectSearch';
+import { useUserNames } from '../hooks/useUserNames';
 import { ProjectCard } from '../components/ProjectCard';
 import { ProjectSubmissionForm } from '../components/ProjectSubmissionForm';
+import { SearchBar } from '../components/search/SearchBar';
 import { SuccessMessage } from '../components/ui/SuccessMessage';
+import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
 export function Projects() {
   const { user } = useAuth();
@@ -12,19 +16,23 @@ export function Projects() {
     status: 'approved',
     limit: 50
   });
+  const [searchTerm, setSearchTerm] = useState('');
   const [showSubmissionForm, setShowSubmissionForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  const filteredProjects = useProjectSearch(projects, searchTerm);
+  const userNames = useUserNames(projects.map(p => p.userId));
 
   const handleSubmissionSuccess = () => {
     setShowSubmissionForm(false);
     setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 5000); // Hide success message after 5 seconds
+    setTimeout(() => setShowSuccess(false), 5000);
   };
 
   if (loading) {
     return (
       <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <LoadingSpinner size="large" />
       </div>
     );
   }
@@ -57,6 +65,13 @@ export function Projects() {
             Discover innovative projects created by our talented students
           </p>
           
+          <div className="max-w-2xl mx-auto mb-8">
+            <SearchBar 
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+            />
+          </div>
+
           {user && (
             <button
               onClick={() => setShowSubmissionForm(!showSubmissionForm)}
@@ -67,48 +82,50 @@ export function Projects() {
           )}
         </motion.div>
 
-        <AnimatePresence mode="wait">
-          {showSuccess && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-2xl mx-auto mb-8"
-            >
-              <SuccessMessage message="Project submitted successfully! It will be reviewed by our team." />
-            </motion.div>
-          )}
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="max-w-2xl mx-auto mb-8"
+          >
+            <SuccessMessage message="Project submitted successfully! It will be reviewed by our team." />
+          </motion.div>
+        )}
 
-          {showSubmissionForm ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="max-w-2xl mx-auto mb-16 bg-white p-8 rounded-xl shadow-lg"
-            >
-              <h2 className="text-2xl font-bold mb-6">Submit Your Project</h2>
-              <ProjectSubmissionForm onSuccess={handleSubmissionSuccess} />
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              {projects.length === 0 ? (
-                <div className="text-center text-gray-600">
-                  No projects available at the moment.
-                </div>
-              ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {projects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
-                  ))}
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {showSubmissionForm ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="max-w-2xl mx-auto mb-16 bg-white p-8 rounded-xl shadow-lg"
+          >
+            <h2 className="text-2xl font-bold mb-6">Submit Your Project</h2>
+            <ProjectSubmissionForm onSuccess={handleSubmissionSuccess} />
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {filteredProjects.length === 0 ? (
+              <div className="text-center text-gray-600">
+                No projects found matching your search.
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredProjects.map((project) => (
+                  <ProjectCard 
+                    key={project.id} 
+                    project={project}
+                    userName={userNames[project.userId]}
+                  />
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
       </div>
     </div>
   );

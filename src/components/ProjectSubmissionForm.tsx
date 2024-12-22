@@ -28,8 +28,14 @@ export function ProjectSubmissionForm({ onSuccess }: ProjectSubmissionFormProps)
     setError('');
 
     try {
-      await addDoc(collection(db, 'projects'), {
+      // Remove empty demoUrl if it's not provided
+      const projectData = {
         ...data,
+        demoUrl: data.demoUrl || null
+      };
+
+      await addDoc(collection(db, 'projects'), {
+        ...projectData,
         status: 'pending',
         userId: user.uid,
         createdAt: Date.now(),
@@ -75,6 +81,7 @@ export function ProjectSubmissionForm({ onSuccess }: ProjectSubmissionFormProps)
         label="Demo URL (Optional)"
         {...register('demoUrl')}
         error={errors.demoUrl?.message}
+        placeholder="https://example.com"
       />
 
       <FormInput

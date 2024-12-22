@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Github, ExternalLink } from 'lucide-react';
+import { Github, ExternalLink, User } from 'lucide-react';
+import { useUserProfile } from '../hooks/useUserProfile';
 import type { Project } from '../types/project';
 
 interface ProjectCardProps {
@@ -7,6 +8,8 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const { profile } = useUserProfile(project.userId);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -21,6 +24,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
         />
       </div>
       <div className="p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <User className="w-4 h-4 text-gray-500" />
+          <span className="text-sm text-gray-600">
+            {profile?.displayName || 'Loading...'}
+          </span>
+        </div>
         <h3 className="text-xl font-bold mb-2">{project.title}</h3>
         <p className="text-gray-600 mb-4">{project.description}</p>
         <div className="flex flex-wrap gap-2 mb-4">

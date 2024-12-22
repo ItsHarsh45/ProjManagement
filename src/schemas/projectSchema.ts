@@ -12,7 +12,8 @@ export const projectSchema = z.object({
     .startsWith('https://github.com/', 'Must be a GitHub repository URL'),
   demoUrl: z.string()
     .url('Must be a valid URL')
-    .optional(),
+    .optional()
+    .or(z.literal('')),  // Allow empty string
   imageUrl: z.string()
     .url('Must be a valid image URL')
     .startsWith('https://', 'Must be a secure URL (https)'),

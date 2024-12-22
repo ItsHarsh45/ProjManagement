@@ -42,6 +42,12 @@ service cloud.firestore {
         project.tags.size() <= 10;
     }
     
+    // Users collection rules
+    match /users/{userId} {
+      allow read: if true;  // Allow reading user profiles
+      allow write: if isOwner(userId) || isAdmin();  // Only allow users to modify their own profiles
+    }
+    
     // Projects collection rules
     match /projects/{projectId} {
       allow read: if true;

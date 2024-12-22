@@ -21,14 +21,14 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen pt-24 bg-gradient-to-br from-white via-indigo-50/30 to-white">
-      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-indigo-50/30 to-white">
+      <div className="w-full max-w-md px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-xl shadow-lg p-8"
         >
-          <h1 className="text-2xl font-bold mb-6 text-center">Welcome Back</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">Welcome Back</h1>
           
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
@@ -69,9 +69,9 @@ export function Login() {
             </button>
           </form>
 
-          <p className="mt-4 text-center text-gray-600">
+          <p className="mt-6 text-center text-gray-600">
             Don't have an account?{' '}
-            <Link to="/register" className="text-indigo-600 hover:text-indigo-700">
+            <Link to="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
               Sign up
             </Link>
           </p>

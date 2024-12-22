@@ -55,6 +55,7 @@ export function AuthNavbar() {
             <div className="hidden md:flex items-center gap-8">
               <Link to="/" className="text-black hover:text-blue-600 transition-colors">Home</Link>
               <Link to="/projects" className="text-black hover:text-blue-600 transition-colors">Projects</Link>
+              <Link to="/explore" className="text-black hover:text-blue-600 transition-colors">Explore</Link>
               <Link to="/about" className="text-black hover:text-blue-600 transition-colors">About</Link>
               <Link to="/contact" className="text-black hover:text-blue-600 transition-colors">Contact</Link>
             </div>
