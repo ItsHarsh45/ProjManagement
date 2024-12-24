@@ -8,6 +8,7 @@ import { About } from './pages/About';
 import { Contact } from './pages/Contact';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { ForgotPassword } from './pages/ForgotPassword';
 import { Profile } from './pages/Profile';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Explore } from './pages/Explore';
@@ -44,6 +45,7 @@ function AppRoutes() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/profile" element={
         <PrivateRoute>
           <Profile />
@@ -55,14 +57,17 @@ function AppRoutes() {
 }
 
 export default function App() {
+  const { user } = useAuth();
+  const { isAdmin } = useAdmin(user);
+
   return (
     <AuthProvider>
       <div className="flex flex-col min-h-screen">
-        <AuthNavbar />
+        {!isAdmin && <AuthNavbar />}
         <main className="flex-grow pb-24">
           <AppRoutes />
         </main>
-        <Footer />
+        {!isAdmin && <Footer />}
       </div>
     </AuthProvider>
   );
