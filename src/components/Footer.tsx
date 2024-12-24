@@ -1,6 +1,7 @@
 import { Github, Twitter, Linkedin } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext'; // Add this import
 
 const socialLinks = {
   github: 'https://github.com/ItsHarsh45',
@@ -10,11 +11,22 @@ const socialLinks = {
 
 export function Footer() {
   const location = useLocation();
+  const { user } = useAuth(); // Add this hook
 
   // Scroll to top when route changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  // Check if current path is an admin route or user is logged in
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isPrivateRoute = location.pathname.startsWith('/dashboard') || 
+                        location.pathname.startsWith('/profile');
+
+  // Don't render footer for admin routes or when user is logged in
+  if (isAdminRoute || (user && isPrivateRoute)) {
+    return null;
+  }
 
   return (
     <footer className="bg-gray-900 text-white py-12 mt-auto">
